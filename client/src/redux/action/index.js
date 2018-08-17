@@ -1,15 +1,16 @@
 import * as Types from "../action_type";
+import * as ApiPaths from "../../common/constant";
 import { apiCaller } from "../../common/function";
 
 export const getListProduct = () => {
   var params = {};
   return dispatch => {
-    return apiCaller("/api/products", "GET", params).then(res => {
-      dispatch(getListProductDispatch(res.data));
+    return apiCaller(ApiPaths.URL_API_PRODUCT, "GET", params).then(res => {
+      dispatch(getListProduct_Dispatch(res.data));
     });
   };
 };
 
-export const getListProductDispatch = products => {
+export const getListProduct_Dispatch = products => {
   return { type: Types.GET_LIST_PRODUCT, products };
 };

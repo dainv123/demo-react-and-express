@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import "../dist/css/Home.css";
 import { getListProduct } from "../../redux/action";
+import "../dist/css/Home.css";
 
 class Home extends Component {
   constructor(props) {
@@ -16,15 +16,13 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <h3>This is HOME PAGE, {this.props.products}</h3>
+        <h3>This is HOME PAGE</h3>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state.products);
-
   return {
     products: state.products
   };
