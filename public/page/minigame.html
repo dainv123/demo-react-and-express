@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mini Game</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="form">
+            <input type="text" placeholder="Hoten" class="hoten">
+            <input type="text" placeholder="Email" class="email">
+            <input type="text" placeholder="So dien thoai" class="phone">
+            <button type="submit">Send</button>
+        </div>
+        <div class="list">
+            <h3>Danh sach hoc vien</h3>
+            <div class="list-content">
+
+            </div>
+        </div>
+    </div>
+    <script src="https://e-chatdemo.herokuapp.com/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io('https://e-chatdemo.herokuapp.com');
+        var hoten = document.querySelector('.hoten');
+        var email = document.querySelector('.email');
+        var phone = document.querySelector('.phone');
+        var send = document.querySelector('.form button');
+        var list_content = document.querySelector('.list-content');
+
+        send.onclick = function () {
+            socket.emit('Client send info', {
+                hoten: hoten.value,
+                email: email.value,
+                phone: phone.value
+            })
+        }
+
+        socket.on('Server send info', function (data) {
+            list_content.innerHTML = "";
+            data.forEach((element, key) => {
+                var node_div = document.createElement('div');
+                node_div.innerText = key + ':' + element.HOTEN;
+                list_content.append(node_div);
+            });
+        })
+
+    </script>
+</body>
+
+</html>
