@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getListProduct } from "../../redux/action";
+import { getListProduct, postCreateProduct } from "../../redux/action";
 import "../dist/css/Home.css";
 
 class Home extends Component {
@@ -16,7 +16,7 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <h3>This is HOME PAGE</h3>
+        <h3 onClick={this.props.call_CreateProduct}>This is HOME PAGE</h3>
       </div>
     );
   }
@@ -32,6 +32,9 @@ const mapDispathToProps = (dispatch, props) => {
   return {
     call_GetListProduct: () => {
       dispatch(getListProduct());
+    },
+    call_CreateProduct: () => {
+      dispatch(postCreateProduct());
     }
   };
 };

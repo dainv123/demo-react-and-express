@@ -2,20 +2,49 @@ var fs = require("fs"),
   tmpl = require("blueimp-tmpl"),
   express = require("express");
 var app = express();
+var bodyParser = require('body-parser');
+var multer = require('multer');
+var server = app.listen(process.env.PORT || 5000);
+var io = require('socket.io').listen(server);
+
+var listHV = [];
+
+var db
+var MongoClient = require('mongodb').MongoClient;
+MongoClient.connect('mongodb://localhost:27017/', (err, client) => {
+  if (err) return console.log(err)
+  db = client.db('e-chat')
+  console.log('Connect DB success');
+})
 
 /**
  * Path buplic
  */
 app.use("/dist", express.static("public/dist"));
+app.use(bodyParser.json()); // for parsing application/json
+// app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+// app.use(multer());
 
 /**
  * Api
  */
 app.get("/api/products", (req, res) => {
   res.json({
+    status: 'success',
     data: [{ id: 1, name: "Quan HT11" }, { id: 2, name: "Quan HT12" }]
   });
 });
+
+app.post('/api/products/create', (req, res) => {
+  var item = { _id: Math.floor(Math.random() * 1000000) + 1, name: req.body.name };
+  db.collection('user').insertOne(item, function (err, res) {
+    if (err) throw err;
+  });
+  db.collection("user").find().toArray(function (err, result) {
+    if (err) throw err;
+    res.json({ status: 'success', data: result });
+  });
+})
 
 app.get("/", function (req, res) {
   res.send("Hello World");
@@ -44,10 +73,6 @@ app.get("/:content", function (req, res) {
 /**
  * Socket io
  */
-var server = app.listen(process.env.PORT || 5000);
-var io = require('socket.io').listen(server);
-var listHV = [];
-
 io.on('connection', function (socket) {
   console.log("Chao mung: " + socket.id);
   socket.emit('sendsv', { hello: 'server' });
@@ -88,3 +113,7 @@ function Hocvien(hoten, email, phone) {
   this.Email = email;
   this.Phone = phone;
 }
+
+/**
+ * Connect Mongodb
+ */
